@@ -3,7 +3,11 @@ package com.example.oauth_practice.application;
 import com.example.oauth_practice.Impl.Oauth2UserInfo;
 import com.example.oauth_practice.Impl.Oauth2UserInfoFactory;
 import com.example.oauth_practice.exception.Oauth2AuthenticationException;
+import com.example.oauth_practice.user.domain.SessionUser;
+import com.example.oauth_practice.user.domain.User;
 import com.example.oauth_practice.user.domain.enums.ProviderType;
+import com.example.oauth_practice.user.domain.repository.UserRepository;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -16,6 +20,8 @@ import org.springframework.util.StringUtils;
 @Service
 @RequiredArgsConstructor
 public class CustomOauth2UserService extends DefaultOAuth2UserService {
+    private final UserRepository userRepository;
+    private final HttpSession httpSession;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest request) throws OAuth2AuthenticationException {
@@ -41,6 +47,31 @@ public class CustomOauth2UserService extends DefaultOAuth2UserService {
             throw new Oauth2AuthenticationException("Email Not Found");
         }
 
+        User user = userRepository.findByEmail(oauth2UserInfo.getEmail())
+                .map(entity -> updateUser(entity, oauth2UserInfo))
+                .orElse(createUser(oauth2UserInfo, providerType));
+
+        httpSession.setAttribute("user", new SessionUser(user));
+
         return new Oauth2UserPrinciple(oauth2UserInfo);
+    }
+
+    private User createUser(Oauth2UserInfo oauth2UserInfo, ProviderType providerType) {
+
+        User user = User.builder()
+                .name(oauth2UserInfo.getName())
+                .email(oauth2UserInfo.getEmail())
+                .providerType(providerType)
+                .build();
+
+        return userRepository.save(user);
+    }
+
+    private User updateUser(User user, Oauth2UserInfo oauth2UserInfo) {
+        if (oauth2UserInfo.getName() != null && !user.getName().equals(oauth2UserInfo.getName())) {
+            user.update(user.getName());
+        }
+
+        return userRepository.save(user);
     }
 }
