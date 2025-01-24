@@ -50,6 +50,13 @@ dependencies {
     //oauth
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
+    //redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'javax.xml.bind:jaxb-api:2.3.0'
+
+    //템플릿
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
 }
 
 tasks.named('test') {
