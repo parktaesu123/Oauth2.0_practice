@@ -1,6 +1,7 @@
 package com.example.oauth_practice.config;
 
 import com.example.oauth_practice.application.CustomOauth2UserService;
+import com.example.oauth_practice.handler.OAuth2AuthenticationFailureHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,6 +19,7 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final CustomOauth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -42,6 +44,7 @@ public class SecurityConfig {
                         .userInfoEndpoint(userInfo -> userInfo
                                 .userService(customOAuth2UserService)
                         )
+                        .failureHandler(oAuth2AuthenticationFailureHandler)
                 )
 
                 .sessionManagement(session -> session
