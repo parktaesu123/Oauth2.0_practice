@@ -4,16 +4,11 @@ spring:
       client:
         registration:
           google:
-            client-id: ${client ID}
-            client-secret: ${client secret}
+            client-id: ${client_ID}
+            client-secret: ${client_secret}
             scope: profile, email
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            redirect-uri: "http://localhost:8080/login/oauth2/code/google"
             client-name: Google
-        provider:
-          google:
-            authorization-uri: https://accounts.google.com/o/oauth2/auth
-            token-uri: https://oauth2.googleapis.com/token
-            user-info-uri: https://www.googleapis.com/oauth2/v3/userinfo
 
   main:
     allow-bean-definition-overriding: true
