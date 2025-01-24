@@ -24,7 +24,7 @@ public class GoogleOAuth2UserInfo implements Oauth2UserInfo {
 
     @Override
     public ProviderType getProvider() {
-        return ProviderType.GOOGLE;
+        return ProviderType.Google;
     }
 
     @Override
