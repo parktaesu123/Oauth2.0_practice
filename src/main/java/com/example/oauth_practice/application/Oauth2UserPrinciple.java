@@ -1,5 +1,6 @@
-package com.example.oauth_practice.Impl;
+package com.example.oauth_practice.application;
 
+import com.example.oauth_practice.Impl.Oauth2UserInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
